@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Patrick+Hand&family=Kalam:wght@700&family=Outfit:wght@600&display=swap');
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            font-family: 'Patrick Hand', cursive;
+        }
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 720px;
+            height: 520px;
+            margin: 0 auto;
+            background-color: #FDFBF7;
+            background-image: radial-gradient(#C8BFB0 1.5px, transparent 1.5px);
+            background-size: 20px 20px;
+            border: 3px solid #8D6E63;
+            border-radius: 16px;
+            box-shadow: 4px 6px 16px rgba(74, 62, 61, 0.1);
+            overflow: hidden;
+            padding: 15px;
+        }
+        .canvas-header {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-family: 'Caveat', cursive;
+            font-size: 26px;
+            color: #8D6E63;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .sticker-item {
+            position: absolute;
+            cursor: grab;
+            touch-action: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px transparent dashed;
+            border-radius: 8px;
+            padding: 4px;
+            z-index: 10;
+            transition: transform 0.1s ease;
+        }
+        .sticker-item:active {
+            cursor: grabbing;
+        }
+        .sticker-item:hover, .sticker-item.selected {
+            border-color: #FF7043;
+            background: rgba(255, 235, 238, 0.3);
+        }
+        .sticker-item img {
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .text-sticker-card {
+            background: #FFF9C4;
+            border: 2px dashed #8D6E63;
+            border-radius: 12px;
+            padding: 8px 16px;
+            font-family: 'Caveat', cursive;
+            font-size: 24px;
+            font-weight: bold;
+            color: #4E342E;
+            box-shadow: 3px 4px 10px rgba(74, 62, 61, 0.15);
+            white-space: nowrap;
+            width: auto !important;
+            height: auto !important;
+            min-width: 60px;
+        }
+        .delete-btn, .scale-btn {
+            position: absolute;
+            top: -10px;
+            width: 24px;
+            height: 24px;
+            color: white;
+            border-radius: 50%;
+            font-size: 14px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 20;
+        }
+        .delete-btn {
+            right: -10px;
+            background: #E53935;
+        }
+        .scale-up {
+            left: -10px;
+            background: #43A047;
+        }
+        .scale-down {
+            left: 18px;
+            background: #FB8C00;
+        }
+        .sticker-item:hover .delete-btn, .sticker-item.selected .delete-btn,
+        .sticker-item:hover .scale-btn, .sticker-item.selected .scale-btn {
+            display: flex;
+        }
+        .canvas-hint {
+            font-size: 14px;
+            color: #8D6E63;
+            margin-top: 6px;
+            text-align: right;
+            font-weight: bold;
+        }
+        .empty-state {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #A1887F;
+            font-size: 20px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas-container" id="canvas">
+        <div class="canvas-header" id="canvas-header">📌 Defter Sayfası</div>
+        <div id="empty-notice" class="empty-state" style="display: none;">
+            🎨 Sol menüden sticker seçerek, metin ekleyerek veya sesli günlük anlatarak defterinizi süsleyin!
+        </div>
+    </div>
+    <div class="canvas-hint">💡 Sticker'ları fare ile defter üzerinde istediğiniz yere sürükleyip bırakabilir, + / - ile büyütebilirsiniz.</div>
+
+    <script>
+        function sendToStreamlit(value) {
+            window.parent.postMessage({
+                isStreamlitMessage: true,
+                type: "streamlit:setComponentValue",
+                value: value
+            }, "*");
+        }
+
+        function setFrameHeight(height) {
+            window.parent.postMessage({
+                isStreamlitMessage: true,
+                type: "streamlit:setFrameHeight",
+                height: height
+            }, "*");
+        }
+
+        let stickersCatalog = {};
+        let activeDateStr = "";
+
+        window.addEventListener("message", (event) => {
+            if (event.data && event.data.type === "streamlit:render") {
+                const args = event.data.args;
+                renderComponent(args);
+            }
+        });
+
+        window.parent.postMessage({
+            isStreamlitMessage: true,
+            type: "streamlit:componentReady",
+            apiVersion: 1
+        }, "*");
+
+        setFrameHeight(560);
+
+        function renderComponent(args) {
+            stickersCatalog = args.stickers_dict || {};
+            const existingStickers = args.existing_stickers || [];
+            activeDateStr = args.date_str || "";
+
+            const canvasHeader = document.getElementById("canvas-header");
+            if (canvasHeader) {
+                canvasHeader.innerText = "📌 Defter Sayfası (" + activeDateStr + ")";
+            }
+
+            const canvas = document.getElementById("canvas");
+            const emptyNotice = document.getElementById("empty-notice");
+
+            const oldItems = canvas.querySelectorAll(".sticker-item");
+            oldItems.forEach(el => el.remove());
+
+            if (!existingStickers || existingStickers.length === 0) {
+                emptyNotice.style.display = "block";
+            } else {
+                emptyNotice.style.display = "none";
+                existingStickers.forEach((st, idx) => {
+                    addStickerToCanvas(st.sticker_key, st.category || "cute", st.pos_x, st.pos_y, st.scale || 1.0, st.rotation || 0, st.id, idx);
+                });
+            }
+        }
+
+        function getStickerSrc(key, category) {
+            if (stickersCatalog[category] && stickersCatalog[category][key]) {
+                return stickersCatalog[category][key];
+            }
+            for (let cat in stickersCatalog) {
+                if (stickersCatalog[cat][key]) {
+                    return stickersCatalog[cat][key];
+                }
+            }
+            for (let cat in stickersCatalog) {
+                let keys = Object.keys(stickersCatalog[cat]);
+                if (keys.length > 0) return stickersCatalog[cat][keys[0]];
+            }
+            return null;
+        }
+
+        function addStickerToCanvas(key, category, x, y, scale, rotation, dbId = null, index = 0) {
+            const canvas = document.getElementById("canvas");
+            const emptyNotice = document.getElementById("empty-notice");
+            emptyNotice.style.display = "none";
+
+            const wrapper = document.createElement("div");
+            const isText = (category === "text" || key.startsWith("text:"));
+
+            if (isText) {
+                wrapper.className = "sticker-item text-sticker-card";
+                const parts = key.split(":");
+                let textVal = key;
+                let bgHex = "#FFF9C4";
+                let borderHex = "#8D6E63";
+                let fontFamily = "'Caveat', cursive";
+
+                if (parts.length >= 4 && parts[0] === "text") {
+                    const colorKey = parts[1];
+                    const fontKey = parts[2];
+                    textVal = parts.slice(3).join(":");
+
+                    if (colorKey === "pink") { bgHex = "#F8BBD0"; borderHex = "#C2185B"; }
+                    else if (colorKey === "green") { bgHex = "#C8E6C9"; borderHex = "#2E7D32"; }
+                    else if (colorKey === "blue") { bgHex = "#B3E5FC"; borderHex = "#0277BD"; }
+                    else if (colorKey === "purple") { bgHex = "#E1BEE7"; borderHex = "#7B1FA2"; }
+                    else { bgHex = "#FFF9C4"; borderHex = "#8D6E63"; }
+
+                    if (fontKey === "Patrick Hand") fontFamily = "'Patrick Hand', cursive";
+                    else if (fontKey === "Kalam") fontFamily = "'Kalam', cursive";
+                    else if (fontKey === "Outfit") fontFamily = "'Outfit', sans-serif";
+                    else fontFamily = "'Caveat', cursive";
+                } else if (parts[0] === "text") {
+                    textVal = key.replace(/^text:/, "");
+                }
+
+                wrapper.style.backgroundColor = bgHex;
+                wrapper.style.borderColor = borderHex;
+                wrapper.style.fontFamily = fontFamily;
+                wrapper.innerText = textVal;
+
+                if (scale && scale !== 1.0) {
+                    wrapper.style.fontSize = Math.round(24 * scale) + "px";
+                }
+            } else {
+                const src = getStickerSrc(key, category);
+                if (!src) return;
+                wrapper.className = "sticker-item";
+                const size = Math.round(72 * (scale || 1.0));
+                wrapper.style.width = size + "px";
+                wrapper.style.height = size + "px";
+
+                const img = document.createElement("img");
+                img.src = src;
+                wrapper.appendChild(img);
+            }
+
+            let finalX = Math.max(15, Math.min(x !== null && x !== undefined ? x : (40 + (index * 55) % 360), 550));
+            let finalY = Math.max(35, Math.min(y !== null && y !== undefined ? y : (60 + Math.floor((index * 55) / 360) * 80), 400));
+
+            wrapper.style.left = finalX + "px";
+            wrapper.style.top = finalY + "px";
+
+            if (rotation) wrapper.style.transform = `rotate(${rotation}deg)`;
+
+            // Silme Butonu
+            const delBtn = document.createElement("div");
+            delBtn.className = "delete-btn";
+            delBtn.innerText = "×";
+            delBtn.title = "Sil";
+            delBtn.onclick = (e) => {
+                e.stopPropagation();
+                wrapper.remove();
+                if (canvas.querySelectorAll('.sticker-item').length === 0) {
+                    emptyNotice.style.display = "block";
+                }
+                if (dbId) {
+                    sendToStreamlit({ action: "delete", id: dbId });
+                }
+            };
+            wrapper.appendChild(delBtn);
+
+            // Büyütme (+) Butonu
+            const scaleUpBtn = document.createElement("div");
+            scaleUpBtn.className = "scale-btn scale-up";
+            scaleUpBtn.innerText = "+";
+            scaleUpBtn.title = "Büyüt";
+            scaleUpBtn.onclick = (e) => {
+                e.stopPropagation();
+                const newScale = Math.min(2.5, Math.round(((scale || 1.0) + 0.2) * 10) / 10);
+                if (dbId) sendToStreamlit({ action: "scale", id: dbId, scale: newScale });
+            };
+            wrapper.appendChild(scaleUpBtn);
+
+            // Küçültme (-) Butonu
+            const scaleDownBtn = document.createElement("div");
+            scaleDownBtn.className = "scale-btn scale-down";
+            scaleDownBtn.innerText = "-";
+            scaleDownBtn.title = "Küçült";
+            scaleDownBtn.onclick = (e) => {
+                e.stopPropagation();
+                const newScale = Math.max(0.4, Math.round(((scale || 1.0) - 0.2) * 10) / 10);
+                if (dbId) sendToStreamlit({ action: "scale", id: dbId, scale: newScale });
+            };
+            wrapper.appendChild(scaleDownBtn);
+
+            // Drag Logic
+            let isDragging = false;
+            let hasMoved = false;
+            let startX, startY, initialLeft, initialTop;
+
+            wrapper.onmousedown = (e) => {
+                if (e.target.classList.contains('delete-btn') || e.target.classList.contains('scale-btn')) return;
+                isDragging = true;
+                hasMoved = false;
+                startX = e.clientX;
+                startY = e.clientY;
+                initialLeft = wrapper.offsetLeft;
+                initialTop = wrapper.offsetTop;
+                document.querySelectorAll('.sticker-item').forEach(el => el.classList.remove('selected'));
+                wrapper.classList.add('selected');
+            };
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                if (Math.abs(dx) > 3 || Math.abs(dy) > 3) hasMoved = true;
+                let maxW = canvas.clientWidth - (wrapper.offsetWidth || 72);
+                let maxH = canvas.clientHeight - (wrapper.offsetHeight || 72);
+                let newLeft = Math.max(0, Math.min(initialLeft + dx, maxW));
+                let newTop = Math.max(0, Math.min(initialTop + dy, maxH));
+                wrapper.style.left = newLeft + "px";
+                wrapper.style.top = newTop + "px";
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging && hasMoved && dbId) {
+                    const finalLeft = parseInt(wrapper.style.left, 10);
+                    const finalTop = parseInt(wrapper.style.top, 10);
+                    sendToStreamlit({ action: "move", id: dbId, pos_x: finalLeft, pos_y: finalTop });
+                }
+                isDragging = false;
+            });
+
+            canvas.appendChild(wrapper);
+        }
+    </script>
+</body>
+</html>

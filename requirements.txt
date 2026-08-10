@@ -1,0 +1,6 @@
+streamlit>=1.30.0
+pywebview>=4.0.0
+openai>=1.0.0
+streamlit-mic-recorder>=0.0.8
+faster-whisper>=0.10.0
+foundry-local-sdk

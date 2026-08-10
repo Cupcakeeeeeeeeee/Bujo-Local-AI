@@ -1,0 +1,652 @@
+/* =========================================================================
+   BULLET JOURNAL (BUJO) COMPREHENSIVE DESIGN SYSTEM & STYLESHEET
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Patrick+Hand&family=Kalam:wght@400;700&family=Outfit:wght@300;400;600&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+
+:root {
+    --bujo-bg: #FDFBF7;
+    --bujo-dot: #D4C7B5;
+    --bujo-desk: #EFE6D5;
+    --bujo-ink: #3D312A;
+    --bujo-subtext: #5D4037;
+    --bujo-pink: #F8BBD0;
+    --bujo-yellow: #FFF9C4;
+    --bujo-green: #C8E6C9;
+    --bujo-blue: #B3E5FC;
+    --bujo-brown: #8D6E63;
+    --bujo-dark-brown: #4A3E3D;
+    --bujo-shadow: rgba(74, 62, 61, 0.08);
+}
+
+/* Global Font Settings & Body Background with Full Emoji Support */
+html, body, [data-testid="stAppViewContainer"], .main {
+    background-color: var(--bujo-bg) !important;
+    background-image: radial-gradient(var(--bujo-dot) 1.5px, transparent 1.5px) !important;
+    background-size: 22px 22px !important;
+    color: var(--bujo-ink) !important;
+    font-family: 'Patrick Hand', 'Caveat', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif !important;
+    font-size: 18px !important;
+}
+
+/* Full Windowed Fixed Desktop App Layout Container */
+[data-testid="stAppViewContainer"] .main .block-container {
+    max-width: 1350px !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 2rem !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+    margin: 0 auto !important;
+}
+
+/* Main Container Text Color */
+.main p, .main label, .main div, .main li, .main h1, .main h2, .main h3, .main h4 {
+    color: var(--bujo-ink) !important;
+}
+
+/* Material Symbols / Icons Protection (Fixes 'arrow_right', 'keyboard_arrow_right' text on buttons) */
+[data-testid="stIconMaterial"],
+span[data-testid="stIconMaterial"],
+i[data-testid="stIconMaterial"],
+.material-icons,
+.material-symbols-outlined,
+.material-symbols-rounded,
+[class*="st-emotion-cache"] [data-testid="stIconMaterial"],
+[data-baseweb="icon"] {
+    font-family: 'Material Symbols Rounded', 'Material Symbols Outlined', 'Segoe UI Emoji', 'Apple Color Emoji', sans-serif !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    line-height: 1 !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    direction: ltr !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+
+/* Base Headings */
+h1, h2, h3, h4, h5, h6, .bujo-header {
+    font-family: 'Caveat', 'Kalam', 'Segoe UI Emoji', 'Apple Color Emoji', cursive !important;
+    color: var(--bujo-ink) !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+}
+
+h1 { font-size: 2.8rem !important; }
+h2 { font-size: 2.2rem !important; }
+h3 { font-size: 1.8rem !important; }
+
+/* Streamlit Header Bar Cleanup */
+header[data-testid="stHeader"] {
+    background: transparent !important;
+}
+
+/* =========================================================================
+   SIDEBAR CUSTOM STYLING (HIGH CONTRAST & LEGIBILITY)
+   ========================================================================= */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #4A3E3D 0%, #2D2524 100%) !important;
+    border-right: 4px solid #362D2C !important;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.2) !important;
+}
+
+/* Sidebar Headings, Labels, Markdowns, Captions & Radio Text */
+[data-testid="stSidebar"] h1, 
+[data-testid="stSidebar"] h2, 
+[data-testid="stSidebar"] h3, 
+[data-testid="stSidebar"] h4,
+[data-testid="stSidebar"] label, 
+[data-testid="stSidebar"] .stMarkdown,
+[data-testid="stSidebar"] .stMarkdown p,
+[data-testid="stSidebar"] .stMarkdown span,
+[data-testid="stSidebar"] .stCaption,
+[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p,
+[data-testid="stSidebar"] [data-testid="stWidgetLabel"] span,
+[data-testid="stSidebar"] [data-testid="stRadio"] *,
+[data-testid="stSidebar"] div[role="radiogroup"] label *,
+[data-testid="stSidebar"] div[role="radiogroup"] p,
+[data-testid="stSidebar"] div[role="radiogroup"] span {
+    color: #FDFBF7 !important;
+    font-family: 'Patrick Hand', 'Caveat', cursive !important;
+    font-size: 19px !important;
+}
+
+[data-testid="stSidebar"] h3, [data-testid="stSidebar"] h2 {
+    color: #FFE082 !important;
+}
+
+/* Hide Radio Circles for Pure Vertical Text Menu */
+[data-testid="stSidebar"] [data-testid="stRadio"] div[role="radiogroup"] > label > div:first-child {
+    display: none !important;
+}
+
+/* Hover & Selected Accent for Radio Menu Items */
+[data-testid="stSidebar"] div[role="radiogroup"] label {
+    padding: 6px 12px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+    margin-bottom: 2px !important;
+}
+
+[data-testid="stSidebar"] div[role="radiogroup"] label:hover {
+    background-color: rgba(255, 248, 225, 0.15) !important;
+}
+
+[data-testid="stSidebar"] div[role="radiogroup"] label:hover *,
+[data-testid="stSidebar"] div[role="radiogroup"] label[aria-checked="true"] * {
+    color: #FFE082 !important;
+    font-weight: bold !important;
+}
+
+/* Sidebar Inputs, Selectboxes & Dropdowns */
+[data-testid="stSidebar"] div[data-baseweb="select"] {
+    background-color: #FFF8E1 !important;
+    border: 2px solid #8D6E63 !important;
+    border-radius: 10px !important;
+}
+
+[data-testid="stSidebar"] div[data-baseweb="select"] * {
+    color: #3D312A !important;
+}
+
+div[data-baseweb="menu"], ul[role="listbox"], li[role="option"] {
+    background-color: #FFF8E1 !important;
+    color: #3D312A !important;
+}
+
+div[data-baseweb="menu"] * {
+    color: #3D312A !important;
+}
+
+[data-testid="stSidebar"] input, 
+[data-testid="stSidebar"] select {
+    background-color: #FFF8E1 !important;
+    color: #3D312A !important;
+    border: 2px solid #8D6E63 !important;
+}
+
+[data-testid="stSidebar"] div.stButton > button {
+    background: #FFF8E1 !important;
+    color: #3D312A !important;
+    border: 2px solid #8D6E63 !important;
+    border-radius: 10px !important;
+    font-weight: bold !important;
+    box-shadow: 2px 2px 0px #8D6E63 !important;
+}
+
+[data-testid="stSidebar"] div.stButton > button:hover {
+    background: #FFE082 !important;
+    color: #3D312A !important;
+}
+
+/* Sidebar Profile Card */
+.user-profile-card {
+    background: #5D4037 !important;
+    border: 2px dashed #A1887F !important;
+    padding: 16px !important;
+    border-radius: 16px !important;
+    color: #FFF !important;
+    text-align: center !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2) !important;
+}
+
+.user-profile-card h3 {
+    color: #FFE082 !important;
+    margin: 0 !important;
+    font-size: 24px !important;
+    font-family: 'Caveat', cursive !important;
+}
+
+.user-profile-card p {
+    color: #D7CCC8 !important;
+    margin: 4px 0 0 0 !important;
+    font-size: 15px !important;
+}
+
+/* =========================================================================
+   CARDS & BUJO COMPONENTS
+   ========================================================================= */
+
+/* Paper Notebook Cards */
+.bujo-paper-card {
+    background-color: #FFFFFF !important;
+    background-image: radial-gradient(#E8DEC8 1.2px, transparent 1.2px) !important;
+    background-size: 18px 18px !important;
+    border: 2px solid var(--bujo-brown) !important;
+    border-radius: 255px 15px 225px 15px/15px 225px 15px 255px !important;
+    padding: 22px !important;
+    margin-bottom: 20px !important;
+    box-shadow: 6px 6px 16px var(--bujo-shadow) !important;
+    position: relative !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bujo-paper-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 8px 10px 20px rgba(74, 62, 61, 0.12) !important;
+}
+
+/* Post-it Notes */
+.postit-yellow {
+    background-color: #FFFDE7 !important;
+    border-left: 5px solid #FBC02D !important;
+    border-radius: 4px 18px 4px 18px !important;
+    padding: 16px !important;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.06) !important;
+    color: var(--bujo-ink) !important;
+}
+
+.postit-pink {
+    background-color: #FCE4EC !important;
+    border-left: 5px solid #F06292 !important;
+    border-radius: 18px 4px 18px 4px !important;
+    padding: 16px !important;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.06) !important;
+    color: var(--bujo-ink) !important;
+}
+
+.postit-green {
+    background-color: #E8F5E9 !important;
+    border-left: 5px solid #66BB6A !important;
+    border-radius: 4px 18px 4px 18px !important;
+    padding: 16px !important;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.06) !important;
+    color: var(--bujo-ink) !important;
+}
+
+.postit-blue {
+    background-color: #E1F5FE !important;
+    border-left: 5px solid #29B6F6 !important;
+    border-radius: 18px 4px 18px 4px !important;
+    padding: 16px !important;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.06) !important;
+    color: var(--bujo-ink) !important;
+}
+
+/* Washi Tape Decorations */
+.washi-tape-pink {
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    width: 90px;
+    height: 24px;
+    background: rgba(244, 143, 177, 0.75);
+    border: 1px dashed rgba(194, 24, 91, 0.4);
+    transform: rotate(-4deg);
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.washi-tape-yellow {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    width: 90px;
+    height: 24px;
+    background: rgba(255, 245, 157, 0.85);
+    border: 1px dashed rgba(251, 192, 45, 0.5);
+    transform: rotate(3deg);
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+/* Ring Binder / Spiral Effect */
+.spiral-ring-bar {
+    height: 12px;
+    background: repeating-linear-gradient(90deg, #5D4037 0px, #5D4037 12px, transparent 12px, transparent 28px);
+    margin-bottom: 12px;
+    border-radius: 6px;
+}
+
+/* Wooden Bookshelf Visual */
+.bujo-bookshelf {
+    background: linear-gradient(180deg, #A1887F 0%, #6D4C41 100%) !important;
+    border: 6px solid #4E342E !important;
+    border-radius: 12px !important;
+    padding: 24px !important;
+    box-shadow: inset 0 10px 20px rgba(0,0,0,0.3), 0 8px 16px rgba(0,0,0,0.15) !important;
+    margin-bottom: 25px !important;
+}
+
+/* Book Spine Visual */
+.book-spine-card {
+    background: linear-gradient(90deg, #FFFDE7 0%, #FFF8E1 20%, #FFFDE7 100%) !important;
+    border: 2px solid #5D4037 !important;
+    border-radius: 6px !important;
+    padding: 12px !important;
+    text-align: center !important;
+    box-shadow: 4px 6px 10px rgba(0,0,0,0.15) !important;
+    color: var(--bujo-ink) !important;
+}
+
+.book-spine-card h3, .book-spine-card p {
+    color: var(--bujo-ink) !important;
+}
+
+/* Cinema Ticket Stub */
+.cinema-ticket {
+    background: #FF7043 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #D84315 !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    position: relative !important;
+    box-shadow: 4px 6px 12px rgba(0,0,0,0.15) !important;
+}
+
+.cinema-ticket h3, .cinema-ticket div, .cinema-ticket p {
+    color: #FFFFFF !important;
+}
+
+.cinema-ticket::before, .cinema-ticket::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    background: var(--bujo-bg);
+    border-radius: 50%;
+    transform: translateY(-50%);
+}
+
+.cinema-ticket::before { left: -9px; }
+.cinema-ticket::after { right: -9px; }
+
+/* Corkboard Mantar Pano */
+.corkboard-container {
+    background-color: #D7CCC8 !important;
+    background-image: radial-gradient(#A1887F 1.5px, transparent 1.5px) !important;
+    background-size: 12px 12px !important;
+    border: 8px solid #5D4037 !important;
+    border-radius: 14px !important;
+    padding: 24px !important;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.2) !important;
+}
+
+/* =========================================================================
+   FORM INPUTS, SELECTBOXES, DROPDOWNS & HOVER FIXES
+   ========================================================================= */
+
+input, textarea, select, 
+div[data-baseweb="input"] input, 
+div[data-baseweb="base-input"] input,
+div[data-baseweb="textarea"] textarea {
+    background-color: #FFFFFF !important;
+    color: #3D312A !important;
+    border: 2px solid #8D6E63 !important;
+    border-radius: 10px !important;
+    font-family: 'Patrick Hand', cursive !important;
+    font-size: 18px !important;
+    opacity: 1 !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #8D7B68 !important;
+    opacity: 0.7 !important;
+}
+
+div[data-baseweb="select"] {
+    background-color: #FFFFFF !important;
+    border-radius: 10px !important;
+    border: 2px solid #8D6E63 !important;
+}
+
+div[data-baseweb="select"] * {
+    color: #3D312A !important;
+    background-color: transparent !important;
+}
+
+div[data-baseweb="popover"], 
+div[data-baseweb="menu"], 
+ul[role="listbox"],
+[data-testid="stPopoverBody"] {
+    background-color: #FFFDF7 !important;
+    border: 2px solid #8D6E63 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
+    color: #3D312A !important;
+}
+
+li[role="option"], div[role="option"] {
+    background-color: #FFFDF7 !important;
+    color: #3D312A !important;
+    font-family: 'Patrick Hand', cursive !important;
+    font-size: 17px !important;
+    padding: 10px 14px !important;
+    transition: background-color 0.15s ease, color 0.15s ease !important;
+}
+
+li[role="option"]:hover, 
+div[role="option"]:hover, 
+li[aria-selected="true"],
+div[aria-selected="true"],
+li[data-highlighted="true"] {
+    background-color: #FFE082 !important;
+    color: #3D312A !important;
+}
+
+span[data-baseweb="tag"] {
+    background-color: #FFE082 !important;
+    border: 1px solid #8D6E63 !important;
+    border-radius: 8px !important;
+    color: #3D312A !important;
+}
+
+span[data-baseweb="tag"] span {
+    color: #3D312A !important;
+}
+
+div[data-testid="stExpander"] {
+    background: #FFFFFF !important;
+    border: 2px solid #8D6E63 !important;
+    border-radius: 12px !important;
+    margin-bottom: 12px !important;
+    box-shadow: 3px 3px 8px var(--bujo-shadow) !important;
+}
+
+div[data-testid="stExpander"] summary {
+    background: #FFFDF7 !important;
+    color: #3D312A !important;
+    border-radius: 10px !important;
+}
+
+div[data-testid="stExpander"] summary * {
+    color: #3D312A !important;
+    font-family: 'Caveat', cursive !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+
+div[data-testid="stExpander"] summary:hover {
+    background: #FFF9C4 !important;
+}
+
+div[data-testid="stChatMessage"] {
+    background-color: #FFFDE7 !important;
+    border: 2px solid #8D6E63 !important;
+    border-radius: 14px !important;
+    color: #3D312A !important;
+    margin-bottom: 10px !important;
+}
+
+div[data-testid="stChatMessage"] * {
+    color: #3D312A !important;
+}
+
+div[data-testid="stChatInput"] {
+    background-color: #FFFFFF !important;
+    border: 2px solid #8D6E63 !important;
+    border-radius: 14px !important;
+}
+
+div[data-testid="stChatInput"] textarea {
+    color: #3D312A !important;
+}
+
+div.stButton > button {
+    background: #FFF8E1 !important;
+    color: #3D312A !important;
+    border: 2px solid var(--bujo-brown) !important;
+    border-radius: 12px !important;
+    font-family: 'Patrick Hand', cursive !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    box-shadow: 3px 3px 0px var(--bujo-brown) !important;
+    transition: all 0.15s ease !important;
+}
+
+div.stButton > button:hover {
+    transform: translate(-1px, -1px) !important;
+    box-shadow: 4px 4px 0px var(--bujo-brown) !important;
+    background: #FFE082 !important;
+    color: #3D312A !important;
+}
+
+div.stButton > button:active {
+    transform: translate(2px, 2px) !important;
+    box-shadow: 1px 1px 0px var(--bujo-brown) !important;
+}
+
+div.stFormSubmitButton > button {
+    background: #FFB74D !important;
+    color: #FFFFFF !important;
+    border: 2px solid #E65100 !important;
+    box-shadow: 3px 3px 0px #E65100 !important;
+}
+
+div.stFormSubmitButton > button:hover {
+    background: #FFA726 !important;
+    color: #FFFFFF !important;
+}
+
+div[data-baseweb="tab-list"] {
+    background-color: transparent !important;
+    border-bottom: 2px solid #8D6E63 !important;
+}
+
+button[data-baseweb="tab"] {
+    font-family: 'Caveat', cursive !important;
+    font-size: 22px !important;
+    font-weight: bold !important;
+    color: #5D4037 !important;
+    background-color: transparent !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+button[data-baseweb="tab"]:hover {
+    background-color: #FFF9C4 !important;
+    color: #3D312A !important;
+}
+
+button[aria-selected="true"] {
+    color: #D84315 !important;
+    border-bottom: 4px solid #D84315 !important;
+}
+
+div[data-testid="stMetricValue"], div[data-testid="stMetricLabel"] {
+    color: #3D312A !important;
+    font-family: 'Caveat', cursive !important;
+}
+
+div[data-testid="stRadio"] label, div[data-testid="stCheckbox"] label {
+    color: #3D312A !important;
+    font-size: 18px !important;
+}
+
+/* High Contrast Sidebar Radio & Selectbox Styling */
+[data-testid="stSidebar"] [data-testid="stRadio"] label,
+[data-testid="stSidebar"] [data-testid="stRadio"] span,
+[data-testid="stSidebar"] [data-testid="stSelectbox"] label,
+[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {
+    color: #FDFBF7 !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+}
+
+/* 3D Realistic Book Cover Card Design */
+.book-cover-3d {
+    position: relative;
+    background: linear-gradient(135deg, #795548 0%, #4E342E 100%);
+    border-left: 12px solid #3E2723;
+    border-radius: 4px 12px 12px 4px;
+    padding: 16px 16px 16px 20px;
+    color: #FFF8E1 !important;
+    box-shadow: 6px 8px 16px rgba(0,0,0,0.25);
+    margin-bottom: 12px;
+    transition: transform 0.2s ease;
+    overflow: hidden;
+}
+
+.book-cover-3d:hover {
+    transform: translateY(-4px) rotate(-1deg);
+}
+
+.book-cover-3d h3, .book-cover-3d p, .book-cover-3d span {
+    color: #FFF8E1 !important;
+}
+
+.book-ribbon {
+    position: absolute;
+    top: 0;
+    right: 18px;
+    width: 14px;
+    height: 38px;
+    background: #E53935;
+    box-shadow: 1px 2px 4px rgba(0,0,0,0.3);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+}
+
+/* 3D Realistic Wooden Bookshelf Plank Bar */
+.wooden-shelf-bar {
+    width: 100%;
+    height: 18px;
+    background: linear-gradient(180deg, #8D6E63 0%, #5D4037 60%, #3E2723 100%);
+    border-top: 3px solid #A1887F;
+    border-bottom: 3px solid #271C19;
+    border-radius: 4px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+    margin-bottom: 28px;
+    position: relative;
+}
+
+.wooden-shelf-bar::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 1%;
+    right: 1%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    filter: blur(2px);
+}
+
+/* Printable Page Styles (@media print) */
+@media print {
+    [data-testid="stSidebar"], header[data-testid="stHeader"], .canvas-hint, button, .stButton {
+        display: none !important;
+    }
+    body, [data-testid="stAppViewContainer"], .main {
+        background: #FFFFFF !important;
+        color: #000000 !important;
+    }
+    .block-container {
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bujo-bg);
+}
+::-webkit-scrollbar-thumb {
+    background: #A1887F;
+    border-radius: 5px;
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+            <path d="M 20 50 A 18 18 0 0 1 38 25 A 22 22 0 0 1 75 30 A 16 16 0 0 1 80 55 Z" fill="#E0F7FA" stroke="#00838F" stroke-width="4" stroke-linejoin="round"/>
+            <text x="25" y="78" font-size="18" fill="#00ACC1">❄</text>
+            <text x="45" y="85" font-size="18" fill="#00ACC1">❄</text>
+            <text x="65" y="78" font-size="18" fill="#00ACC1">❄</text>
+        </svg>
