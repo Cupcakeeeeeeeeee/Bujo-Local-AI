@@ -3,6 +3,46 @@ import time
 import json
 import sys
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
+class DownloadProgressBar:
+    """
+    Terminalde alt alta yüzlerce satır basmak yerine tek bir satırda
+    modern ve temiz bir ilerleme çubuğu ([██████░░░░] %60) gösterir.
+    """
+    def __init__(self, label="İndiriliyor"):
+        self.label = label
+        self.last_pct = -1
+
+    def __call__(self, *args):
+        if len(args) == 2:
+            extra = f"({args[0]})"
+            pct = args[1]
+        elif len(args) == 1:
+            extra = ""
+            pct = args[0]
+        else:
+            return
+
+        current_pct = int(pct)
+        if current_pct == self.last_pct:
+            return
+        self.last_pct = current_pct
+
+        bar_length = 25
+        filled_length = int(bar_length * current_pct // 100)
+        bar = "█" * filled_length + "░" * (bar_length - filled_length)
+        prefix = f" {self.label} {extra}".rstrip()
+        sys.stdout.write(f"\r{prefix}: [{bar}] %{current_pct:3d}")
+        sys.stdout.flush()
+        if current_pct >= 100:
+            sys.stdout.write("\n")
+            sys.stdout.flush()
+
 MODEL_ALIAS = "phi-4-mini"
 INFO_FILE = "foundry_service_info.json"   # app.py ile aynı klasörde olsun
 
@@ -12,7 +52,7 @@ manager = FoundryLocalManager.instance
 
 print("⚙️ Execution provider'lar hazırlanıyor...")
 try:
-    manager.download_and_register_eps(progress_callback=lambda ep, pct: print(f" {ep}: %{pct:.0f}"))
+    manager.download_and_register_eps(progress_callback=DownloadProgressBar("⚙️ EP"))
 except Exception as ep_err:
     print(f"⚠️ EP yükleme uyarısı: {ep_err}")
 
@@ -23,14 +63,14 @@ def load_best_model_variant(model):
     Kullanıcının donanımında varsayılan EP (örneğin OpenVINO) yüklü veya uyumlu değilse,
     CUDA, Generic GPU veya CPU varyantlarına otomatik geçiş yaparak çökmesini engeller.
     """
-    print(f"📦 Model yükleniyor (Varsayılan: {model.id})...")
+    print(f"📦 Model hazırlanıyor: {model.id}")
     try:
-        model.download(lambda pct: print(f" İndirme: %{pct:.0f}"))
+        model.download(DownloadProgressBar("📥 İndiriliyor"))
         model.load()
-        print(f"✅ Varsayılan model varyantı başarıyla yüklendi: {model.id}")
+        print(f"✅ Model varyantı başarıyla yüklendi: {model.id}")
         return True
     except Exception as err:
-        print(f"⚠️ Varsayılan model varyantı ({model.id}) yüklenemedi: {err}")
+        print(f"\n⚠️ Varsayılan model varyantı ({model.id}) yüklenemedi: {err}")
         print("🔄 Donanımınızla uyumlu alternatif varyantlar taranıyor...")
 
     # Varyantları sırala: CUDA / GPU varyantları önce, Generic CPU en son çare (her bilgisayarda çalışır)
@@ -54,12 +94,12 @@ def load_best_model_variant(model):
         try:
             print(f"👉 Deneniyor: {variant.id}")
             model.select_variant(variant)
-            model.download(lambda pct: print(f" İndirme: %{pct:.0f}"))
+            model.download(DownloadProgressBar("📥 İndiriliyor"))
             model.load()
             print(f"✅ Uyumlu model varyantı yüklendi: {variant.id}")
             return True
         except Exception as v_err:
-            print(f" ❌ {variant.id} yüklenemedi: {v_err}")
+            print(f"\n ❌ {variant.id} yüklenemedi: {v_err}")
 
     return False
 
