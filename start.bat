@@ -1,39 +1,36 @@
 @echo off
 title Bujo - Local AI Assistant Launcher
-chcp 65001 > nul
+
 echo ===================================================
 echo   Bujo - Yerel Yapay Zeka Destekli Asistan
 echo ===================================================
 echo.
 
-:: 1. Sanal ortam (venv) kontrolü
 if not exist "venv" (
-    echo ⚙️ [1/3] Sanal ortam (venv) bulunamadı, otomatik oluşturuluyor...
+    echo [1/3] Sanal ortam ^(venv^) bulunamadi, otomatik olusturuluyor...
     python -m venv venv
     if errorlevel 1 (
         echo.
-        echo ❌ [HATA] Python bulunamadı! Lütfen bilgisayarınızda Python 3.10 veya üzeri kurulu olduğundan emin olun.
+        echo [HATA] Python bulunamadi! Lutfen bilgisayarinizda Python 3.10 veya uzeri kurulu oldugundan emin olun.
         echo Download: https://www.python.org/downloads/
         echo.
         pause
         exit /b 1
     )
-    echo ✅ Sanal ortam başarıyla oluşturuldu.
+    echo [OK] Sanal ortam basariyla olusturuldu.
 )
 
-:: 2. Bağımlılıkların yüklenmesi
-echo 📦 [2/3] Gerekli kütüphaneler denetleniyor ve yükleniyor...
+echo [2/3] Gerekli kutuphaneler denetleniyor ve yukleniyor...
 call venv\Scripts\activate.bat
 pip install -r requirements.txt --quiet
-echo ✅ Kütüphaneler hazır.
+echo [OK] Kutuphaneler hazir.
 
-:: 3. Uygulamanın başlatılması
-echo 🚀 [3/3] Bujo Asistan başlatılıyor...
+echo [3/3] Bujo Asistan baslatiliyor...
 echo.
 python run.py
 
 if errorlevel 1 (
     echo.
-    echo ❌ Uygulama çalışırken bir sorun oluştu.
+    echo [HATA] Uygulama calisirken bir sorun olustu.
     pause
 )
