@@ -82,9 +82,11 @@ python run.py
 ├── main.py                  # PyWebView masaüstü pencere başlatıcısı
 ├── start_service.py         # Foundry Local SDK yerel model servisi
 ├── run.py                   # Tek komutla orkestrasyon betiği
+├── start.bat                # Kod bilmeyenler için tek tıkla Windows başlatıcısı
 ├── requirements.txt         # Python bağımlılıkları
 ├── user_profile.json.example# Örnek kullanıcı profil şablonu
 ├── .gitignore               # Gizlenecek yerel ve geçici dosyalar
+├── LICENSE                  # MIT Açık kaynak lisansı
 └── README.md                # Proje dokümantasyonu
 ```
 
