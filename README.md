@@ -35,8 +35,13 @@ cd AzureLocalRAG
 
 ### 3. Sanal Ortam Oluşturun ve Bağımlılıkları Yükleyin
 ```bash
-# Windows
+# Windows (PowerShell)
 python -m venv venv
+
+# PowerShell script çalıştırma izni hatası alırsanız önce şu komutu çalıştırın:
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+
+# Sanal ortamı aktifleştirin:
 venv\Scripts\activate
 
 # Linux / macOS
