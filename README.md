@@ -20,20 +20,30 @@
 
 ---
 
-## 🛠️ Kurulum
+---
 
-### 1. Gereksinimler
-- Python 3.10 veya üzeri
-- Git
-- Ekran kartı sürücülerinizin güncel olması önerilir (GPU / OpenVINO hızlandırması için).
+## 🚀 Çalıştırma ve Kurulum Seçenekleri
 
-### 2. Depoyu Klonlayın
+### 🟢 Seçenek A: Tek Tıkla Kurulum & Çalıştırma (Kod Bilmeyen Kullanıcılar İçin)
+
+Projeyi indirdikten sonra klasör içerisindeki **`start.bat`** dosyasına **çift tıklamanız yeterlidir**. 
+
+`start.bat` betiği otomatik olarak:
+1. Sanal ortamı (`venv`) oluşturur.
+2. Gerekli tüm Python kütüphanelerini yükler.
+3. Yerel AI servisini ve masaüstü arayüzünü tek tıkla başlatır.
+
+---
+
+### 🔵 Seçenek B: Manuel Kurulum & Çalıştırma (Geliştiriciler İçin)
+
+#### 1. Depoyu Klonlayın
 ```bash
 git clone https://github.com/Cupcakeeeeeeeeee/Bujo-Local-AI.git
 cd Bujo-Local-AI
 ```
 
-### 3. Sanal Ortam Oluşturun ve Bağımlılıkları Yükleyin
+#### 2. Sanal Ortam Oluşturun ve Bağımlılıkları Yükleyin
 ```bash
 # Windows (PowerShell)
 python -m venv venv
@@ -52,36 +62,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Örnek Profili Oluşturun (İsteğe Bağlı)
-Projeyi ilk kez çalıştırırken kendi kullanıcı profilinizi tanımlamak isterseniz:
-```bash
-cp user_profile.json.example user_profile.json
-```
-
----
-
-## 🚀 Çalıştırma
-
-### Yöntem 1: Tek Tıkla Başlatma (Önerilen)
-Orkestrasyon betiği, yerel AI servisini arka planda başlatır, model hazırlığı tamamlandığında masaüstü uygulamasını otomatik açar:
-
+#### 3. Çalıştırın
 ```bash
 python run.py
 ```
-
-### Yöntem 2: Manuel Çalıştırma (Geliştirici Modu)
-Ayrıştırılmış iki terminalde çalıştırmak isterseniz:
-
-1. **1. Terminal (AI Servisini Başlatın):**
-   ```bash
-   python start_service.py
-   ```
-   *Servis hazır olduğunda `foundry_service_info.json` dosyası oluşacaktır.*
-
-2. **2. Terminal (Masaüstü Arayüzünü Başlatın):**
-   ```bash
-   python main.py
-   ```
+*(Veya iki farklı terminalde `python start_service.py` ve `python main.py` çalıştırabilirsiniz).*
 
 ---
 
