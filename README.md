@@ -29,8 +29,8 @@
 
 ### 2. Depoyu Klonlayın
 ```bash
-git clone https://github.com/kullanici_adi/AzureLocalRAG.git
-cd AzureLocalRAG
+git clone https://github.com/Cupcakeeeeeeeeee/Bujo-Local-AI.git
+cd Bujo-Local-AI
 ```
 
 ### 3. Sanal Ortam Oluşturun ve Bağımlılıkları Yükleyin
