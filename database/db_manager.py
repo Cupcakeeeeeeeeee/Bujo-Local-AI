@@ -2,7 +2,7 @@ import sqlite3
 import os
 import json
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "assistant.db")
+DB_PATH = os.environ.get("BUJO_DB_PATH", os.path.join(os.path.dirname(__file__), "assistant.db"))
 
 def get_connection():
     conn = sqlite3.connect(DB_PATH)

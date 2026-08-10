@@ -1063,7 +1063,20 @@ else:
                     u_weight = st.number_input("Kilo (kg)", value=float(user_profile.get("weight", 70)))
 
                 st.divider()
-                u_hobbies = st.multiselect("Hobilerin:", options=HOBBY_OPTIONS, default=user_profile.get("hobbies", []))
+                raw_hobbies = user_profile.get("hobbies", [])
+                if isinstance(raw_hobbies, str):
+                    try:
+                        curr_hobbies = json.loads(raw_hobbies)
+                    except Exception:
+                        curr_hobbies = [h.strip() for h in raw_hobbies.split(",") if h.strip()]
+                elif isinstance(raw_hobbies, list):
+                    curr_hobbies = raw_hobbies
+                else:
+                    curr_hobbies = []
+
+                # Hobiler opsiyon listesinde yoksa (ör. 'Fotoğrafçılık'), Streamlit hatasını önlemek için opsiyonlara ekle
+                all_hobby_options = list(dict.fromkeys(HOBBY_OPTIONS + [str(h) for h in curr_hobbies if h]))
+                u_hobbies = st.multiselect("Hobilerin:", options=all_hobby_options, default=curr_hobbies)
                 u_about = st.text_area("Hakkımda Özel Notlar:", value=user_profile.get("about_me", ""))
 
                 if st.form_submit_button("Profil Bilgilerini Deftere Kaydet 💾"):
@@ -1093,7 +1106,10 @@ else:
                         curr_style_idx = idx
                         break
                 u_style = st.selectbox("Asistan Kişiliği:", options=ASSISTANT_STYLES, index=curr_style_idx)
-                u_len = st.selectbox("Cevap Uzunluğu:", options=RESPONSE_LENGTHS)
+                
+                curr_len = user_profile.get("response_length", "")
+                len_idx = RESPONSE_LENGTHS.index(curr_len) if curr_len in RESPONSE_LENGTHS else 0
+                u_len = st.selectbox("Cevap Uzunluğu:", options=RESPONSE_LENGTHS, index=len_idx)
                 u_rules = st.text_area("Yapay Zekaya Özel Kurallar (Prompt):", value=user_profile.get("ai_rules", ""))
 
                 if st.form_submit_button("Bujo Mizaç Ayarlarını Kaydet 🧠"):
